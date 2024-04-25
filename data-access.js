@@ -12,7 +12,15 @@ async function dbStartup() {
 }
 
 async function getCustomers() {
-    return await collection.find().toArray();
+    try {
+        const customerData = await collection.find().toArray();
+        //throw {"message":"an error occured"};
+        return [customerData, null];
+    } catch (err) {
+        console.log(err.message);
+        return [null, err.message];
+    }
+
 }
 
 dbStartup();
