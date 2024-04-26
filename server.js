@@ -6,6 +6,24 @@ const da = require("./data-access");
 const app = express();
 const port = process.env.PORT || 4000;  // use env var or default to 4000
 
+
+function checkApiKey(req, res, next) {
+    const apiKey = req.headers['x-api-key']; // Assuming the API key is sent in the header named 'x-api-key'
+
+    // Check if API key is present
+    if (!apiKey) {
+        return res.status(401).json({ message: 'Unauthorized: Missing API key' });
+    }
+
+    // Compare the received key with the stored key (from environment variable or configuration file)
+    if (apiKey !== process.env.API_KEY) {
+        return res.status(403).json({ message: 'Forbidden: Invalid API key' });
+    }
+
+    // If valid key, continue processing the request
+    next();
+}
+
 app.use(bodyParser.json());
 
 // Set the static directory to serve files from
@@ -15,9 +33,10 @@ app.use(express.static(staticDir));
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
     console.log("staticDir: " + staticDir);
+    console.log('APIKEY  is ' + process.env.API_KEY);
 });
 
-app.get("/customers", async (req, res) => {
+app.get("/customers",checkApiKey, async (req, res) => {
 
     const [cust, err] = await da.getCustomers();
     if(cust){
