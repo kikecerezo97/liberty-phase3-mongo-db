@@ -2,27 +2,13 @@ const express = require('express');
 const path = require('path');  // for handling file paths
 const bodyParser = require('body-parser');
 const da = require("./data-access");
+const checkApiKey = require("./security").checkApiKey;
 
 const app = express();
 const port = process.env.PORT || 4000;  // use env var or default to 4000
 
 
-function checkApiKey(req, res, next) {
-    const apiKey = req.headers['x-api-key']; // Assuming the API key is sent in the header named 'x-api-key'
 
-    // Check if API key is present
-    if (!apiKey) {
-        return res.status(401).json({ message: 'Unauthorized: Missing API key' });
-    }
-
-    // Compare the received key with the stored key (from environment variable or configuration file)
-    if (apiKey !== process.env.API_KEY) {
-        return res.status(403).json({ message: 'Forbidden: Invalid API key' });
-    }
-
-    // If valid key, continue processing the request
-    next();
-}
 
 app.use(bodyParser.json());
 
