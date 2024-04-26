@@ -33,7 +33,7 @@ app.get("/customers",checkApiKey, async (req, res) => {
     }
 });
 
-app.get("/reset", async (req, res) => {
+app.get("/reset",checkApiKey,  async (req, res) => {
     const [result, err] = await da.resetCustomers();
     if(result){
         res.send(result);
@@ -43,7 +43,7 @@ app.get("/reset", async (req, res) => {
     }
 });
 
-app.post('/customers', async (req, res) => {
+app.post('/customers',checkApiKey, async (req, res) => {
     const newCustomer = req.body;
     if (newCustomer === null) {
         res.status(400);
@@ -63,7 +63,7 @@ app.post('/customers', async (req, res) => {
     }
 });
 
-app.get("/customers/:id", async (req, res) => {
+app.get("/customers/:id",checkApiKey,  async (req, res) => {
     const id = req.params.id;
     // return array [customer, errMessage]
     const [cust, err] = await da.getCustomerById(id);
@@ -75,7 +75,7 @@ app.get("/customers/:id", async (req, res) => {
     }
 });
 
-app.put('/customers/:id', async (req, res) => {
+app.put('/customers/:id',checkApiKey, async (req, res) => {
     const id = req.params.id;
     const updatedCustomer = req.body;
     if (updatedCustomer === null) {
@@ -94,7 +94,7 @@ app.put('/customers/:id', async (req, res) => {
     }
 });
 
-app.delete("/customers/:id", async (req, res) => {
+app.delete("/customers/:id",checkApiKey , async (req, res) => {
     const id = req.params.id;
     // return array [message, errMessage]
     const [message, errMessage] = await da.deleteCustomerById(id);
